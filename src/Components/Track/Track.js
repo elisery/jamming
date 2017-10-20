@@ -10,11 +10,12 @@ class Track extends React.Component {
   }
 
   renderAction() {
-    return this.state.isRemoval ? '-' : '+';
-    //if !this.state.isRemoval
-    //  return <a className="Track-action" onClick={this.addTrack}>+</a>
-    //else
-    //  return <a className="Track-action" onClick={this.removeTrack}>-</a>
+    //return this.state.isRemoval ? '-' : '+';
+    if (!this.state.isRemoval) {
+      return <a className="Track-action" onClick={this.addTrack}>+</a>
+    } else {
+      return <a className="Track-action" onClick={this.removeTrack}>-</a>
+    }
   }
 
   addTrack() {
