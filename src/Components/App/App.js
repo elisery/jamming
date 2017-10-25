@@ -9,15 +9,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { searchResults:
-      [ {Name: 'Rise Up', Artist: 'Andra Day', Album: 'Cheers to the Fall', ID: 'abc', URI: ''},
-        {Name: 'Lovesick', Artist: 'Jacob Whitesides', Album: 'Lovesick - Single', ID: 'def', URI: ''},
-        {Name: 'ILYSB', Artist: 'LANY', Album: 'Make Out', ID: 'ghi', URI: ''}
+      [ //{Name: 'Rise Up', Artist: 'Andra Day', Album: 'Cheers to the Fall', ID: 'abc', URI: '222'},
+        //{Name: 'Lovesick', Artist: 'Jacob Whitesides', Album: 'Lovesick - Single', ID: 'def', URI: '111'},
+        //{Name: 'ILYSB', Artist: 'LANY', Album: 'Make Out', ID: 'ghi', URI: '555'}
       ],
-      playlistName: 'My list',
+      playlistName: 'New Playlist',
       playlistTracks:
-      [ {Name: 'On a Good Day', Artist: 'Oceanlab', Album: 'Anjunabeats', ID: '123', URI: '999'},
-        {Name: 'Oceans Away', Artist: 'ARIZONA', Album: 'Oceans Away', ID: '456', URI: '888'},
-        {Name: 'The Best Crew', Artist: 'Tep No', Album: 'The Best Crew - Single', ID: '789', URI: '777'}
+      [ //{Name: 'On a Good Day', Artist: 'Oceanlab', Album: 'Anjunabeats', ID: '123', URI: '999'},
+        //{Name: 'Oceans Away', Artist: 'ARIZONA', Album: 'Oceans Away', ID: '456', URI: '888'},
+        //{Name: 'The Best Crew', Artist: 'Tep No', Album: 'The Best Crew - Single', ID: '789', URI: '777'}
       ]
     };
     this.addTrack = this.addTrack.bind(this);
@@ -46,13 +46,11 @@ class App extends Component {
   }
 
   savePlaylist() {
-    //Generates an array of uri values called trackURIs
-    //from the playlistTracks property.
     let trackURIs = [];
-    trackURIs = this.state.playlistTracks.forEach(track => {
+    this.state.playlistTracks.forEach(track => {
       trackURIs.push(track.URI);
-      console.log(trackURIs);
     });
+    console.log(`${trackURIs}`);
     Spotify.savePlaylist(this.state.playlistName, trackURIs);
     this.setState({playlistName: 'New Playlist'});
     this.setState({searchResults: []});

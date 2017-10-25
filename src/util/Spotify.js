@@ -44,7 +44,6 @@ const Spotify = {
       }, networkError => console.log(networkError.message)
     ).then (jsonResponse => {
       if(jsonResponse.tracks.items) {
-        console.log(jsonResponse.tracks.items);
         return jsonResponse.tracks.items.map(track => {
           return {
             ID: track.id,
@@ -111,7 +110,6 @@ const Spotify = {
     }).then (() => {
       const spotifyPostTracks = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
       console.log(spotifyPostTracks);
-      console.log(playlistName);
       return fetch(spotifyPostTracks, {
         headers: {Authorization: `Bearer ${defaultAccessToken}`},
         method: 'POST',
