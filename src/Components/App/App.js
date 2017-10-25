@@ -3,20 +3,21 @@ import './App.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
+import Spotify from '../../util/Spotify';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = { searchResults:
-      [ {name: 'Rise Up', artist: 'Andra Day', album: 'Cheers to the Fall', id: '', uri: ''},
-        {name: 'Lovesick', artist: 'Jacob Whitesides', album: 'Lovesick - Single',id: '', uri: ''},
-        {name: 'ILYSB', artist: 'LANY', album: 'Make Out', id: '', uri: ''}
+      [ {Name: 'Rise Up', Artist: 'Andra Day', Album: 'Cheers to the Fall', ID: 'abc', URI: ''},
+        {Name: 'Lovesick', Artist: 'Jacob Whitesides', Album: 'Lovesick - Single', ID: 'def', URI: ''},
+        {Name: 'ILYSB', Artist: 'LANY', Album: 'Make Out', ID: 'ghi', URI: ''}
       ],
       playlistName: 'My list',
       playlistTracks:
-      [ {name: 'On a Good Day', artist: 'Oceanlab', album: 'Anjunabeats', id: '', uri: ''},
-        {name: 'Oceans Away', artist: 'ARIZONA', album: 'Oceans Away', id: '', uri: ''},
-        {name: 'The Best Crew', artist: 'Tep No', album: 'The Best Crew - Single', id: '', uri: ''}
+      [ {Name: 'On a Good Day', Artist: 'Oceanlab', Album: 'Anjunabeats', ID: '123', URI: ''},
+        {Name: 'Oceans Away', Artist: 'ARIZONA', Album: 'Oceans Away', ID: '456', URI: ''},
+        {Name: 'The Best Crew', Artist: 'Tep No', Album: 'The Best Crew - Single', ID: '789', URI: ''}
       ]
     };
     this.addTrack = this.addTrack.bind(this);
@@ -27,37 +28,39 @@ class App extends Component {
   }
 
   addTrack(track) {
-    var checkTrack = this.state.playlistTracks.find(theTrack => theTrack.id === track.id);
-    if (checkTrack === null) {
+    var checkTrack = this.state.playlistTracks.find(theTrack => theTrack.ID === track.ID);
+    if (checkTrack === undefined) {
       let newList = this.state.playlistTracks.concat(track);
       this.setState({playlistTracks: newList});
     }
   }
 
   removeTrack(track) {
-    //var checkTrack = this.playlistTracks.find(theTrack => theTrack.id === track.id);
-    //if (checkTrack !== null) {
-    let newList = this.state.playlistTracks.filter(theTrack => theTrack.id !== track.id);
+    let newList = this.state.playlistTracks.filter(theTrack => theTrack.ID !== track.ID);
     this.setState({playlistTracks: newList});
-    //}
+
   }
 
   updatePlaylistName(name) {
     this.setState({playlistName: name});
   }
 
-  //I'm not sure about this search method
   savePlaylist() {
     //Generates an array of uri values called trackURIs
     //from the playlistTracks property.
     let trackURIs = [];
     trackURIs = this.state.playlistTracks.forEach(track => {
-      trackURIs.push(track.uri);
+      trackURIs.push(track.URI);
     });
+    Spotify.savePlaylist(this.state.playlistName, trackURIs);
+    this.setState({playlistName: 'New Playlist'});
+    this.setState({searchResults: []});
   }
 
   search(searchTerm) {
-    console.log(searchTerm);
+    Spotify.search(searchTerm).then(tracks => {
+      this.setState({searchResults: tracks});
+    });
   }
 
   render() {

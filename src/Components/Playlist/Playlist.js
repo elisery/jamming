@@ -7,7 +7,6 @@ class Playlist extends React.Component {
     super(props);
     this.state = {isRemoval: true};
     this.handleNameChange = this.handleNameChange.bind(this);
-    console.log(this.state.isRemoval);
   }
 
   handleNameChange(e) {
