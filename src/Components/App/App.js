@@ -15,9 +15,9 @@ class App extends Component {
       ],
       playlistName: 'My list',
       playlistTracks:
-      [ {Name: 'On a Good Day', Artist: 'Oceanlab', Album: 'Anjunabeats', ID: '123', URI: ''},
-        {Name: 'Oceans Away', Artist: 'ARIZONA', Album: 'Oceans Away', ID: '456', URI: ''},
-        {Name: 'The Best Crew', Artist: 'Tep No', Album: 'The Best Crew - Single', ID: '789', URI: ''}
+      [ {Name: 'On a Good Day', Artist: 'Oceanlab', Album: 'Anjunabeats', ID: '123', URI: '999'},
+        {Name: 'Oceans Away', Artist: 'ARIZONA', Album: 'Oceans Away', ID: '456', URI: '888'},
+        {Name: 'The Best Crew', Artist: 'Tep No', Album: 'The Best Crew - Single', ID: '789', URI: '777'}
       ]
     };
     this.addTrack = this.addTrack.bind(this);
@@ -51,6 +51,7 @@ class App extends Component {
     let trackURIs = [];
     trackURIs = this.state.playlistTracks.forEach(track => {
       trackURIs.push(track.URI);
+      console.log(trackURIs);
     });
     Spotify.savePlaylist(this.state.playlistName, trackURIs);
     this.setState({playlistName: 'New Playlist'});

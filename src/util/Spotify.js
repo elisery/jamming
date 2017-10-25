@@ -5,7 +5,7 @@ let accessToken;
 const Spotify = {
   getAccessToken() {
     if (accessToken) {
-      return accessToken;
+      return new Promise(resolve => resolve(accessToken));
     }
 
     const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
@@ -29,12 +29,13 @@ const Spotify = {
   },
 
   search(searchTerm) {
-    this.getAccessToken();
-    //return Spotify.getAccessToken().then(() => {
+    return Spotify.getAccessToken().then(() => {
       return fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track`,
       {
-        headers: {'Authorization': `Bearer ${accessToken}`}
-      }).then (response => {
+        headers: {Authorization: `Bearer ${accessToken}`}
+      });
+    }
+    ).then (response => {
           if(response.ok) {
             return response.json();
           } else {
@@ -61,40 +62,34 @@ const Spotify = {
 
   savePlaylist(playlistName, trackURIs) {
     this.getAccessToken();
-    let userID;
+    let userID = '';
     let playlistID = '';
-    let spotifyPostPlaylist = `https://api.spotify.com/v1/users/${userID}/playlists`;
-    let spotifyPostTracks = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
 
     if (playlistName === '' && trackURIs === []) {
       return;
     }
+
     let defaultAccessToken = accessToken;
-    let headers =  {
-      'Authorization': `Bearer ${defaultAccessToken}`,
-    };
-      return fetch(`https://api.spotify.com/v1/me`,
-      {
-        headers: {'Authorization': `Bearer ${accessToken}`}
-      }).then (response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Request failed!');
-        }
-      }, networkError => console.log(networkError.message)
+
+    return fetch(`https://api.spotify.com/v1/me`,
+    {
+      headers: {Authorization: `Bearer ${defaultAccessToken}`}
+    }).then (response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Request failed!');
+      }
+    }, networkError => console.log(networkError.message)
     ).then (jsonResponse => {
       if (jsonResponse.id) {
-        userID = jsonResponse.id;
-        console.log(userID);
-        spotifyPostPlaylist = `https://api.spotify.com/v1/users/${userID}/playlists`;
-        console.log(spotifyPostPlaylist);
-        return userID;
+        return userID = jsonResponse.id;
       }
     }).then (() => {
-
-    return fetch(spotifyPostPlaylist, {
-        headers: {'Authorization': `Bearer ${accessToken}`},
+      const spotifyPostPlaylist = `https://api.spotify.com/v1/users/${userID}/playlists`;
+      console.log(spotifyPostPlaylist);
+      return fetch(spotifyPostPlaylist, {
+        headers: {Authorization: `Bearer ${defaultAccessToken}`},
         method: 'POST',
         body: JSON.stringify({'name': playlistName})
       });
@@ -110,18 +105,20 @@ const Spotify = {
       if (jsonResponse.id) {
         playlistID = jsonResponse.id;
         console.log(playlistID);
-        spotifyPostTracks = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
-        console.log(spotifyPostTracks);
         return playlistID = jsonResponse.id;
       }
 
     }).then (() => {
+      const spotifyPostTracks = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
+      console.log(spotifyPostTracks);
+      console.log(playlistName);
       return fetch(spotifyPostTracks, {
-        headers: {'Authorization': `Bearer ${accessToken}`},
+        headers: {Authorization: `Bearer ${defaultAccessToken}`},
         method: 'POST',
         body: JSON.stringify({'uris': trackURIs})
       });
     }).then (response => {
+      console.log(response);
       if (response.ok) {
         return response.json();
       } else {
@@ -130,7 +127,6 @@ const Spotify = {
       }
     }, networkError => console.log(networkError.message)
     ).then (jsonResponse => {
-      console.log(jsonResponse);
       if (jsonResponse.id) {
         return playlistID = jsonResponse.id;
       }
