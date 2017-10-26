@@ -9,6 +9,7 @@ class Track extends React.Component {
   }
 
   renderAction() {
+    //If isRemove, render a track with '+' beside it, else render track with '-'
     const isRemove = this.props.isRemoval;
     if (isRemove === true) {
       return <a className="Track-action" onClick={this.removeTrack}>-</a>

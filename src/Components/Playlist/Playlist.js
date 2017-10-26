@@ -5,10 +5,12 @@ import './Playlist.css';
 class Playlist extends React.Component {
   constructor(props) {
     super(props);
+    //Sets state for playlist tracks as '-'
     this.state = {isRemoval: true};
     this.handleNameChange = this.handleNameChange.bind(this);
   }
 
+  //Playlist name event handler
   handleNameChange(e) {
     const newListName = e.target.value;
     this.props.onNameChange(newListName);

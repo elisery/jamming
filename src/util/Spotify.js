@@ -3,6 +3,7 @@ const redirectURI = 'http://localhost:3000/';
 let accessToken;
 
 const Spotify = {
+  //Create token for connecting to the Spotify API
   getAccessToken() {
     if (accessToken) {
       return new Promise(resolve => resolve(accessToken));
@@ -24,11 +25,12 @@ const Spotify = {
     }
     return new Promise((resolve) => {
         return resolve(accessToken);
-
     });
   },
 
+  //Search Spotify
   search(searchTerm) {
+    //Get access token then connect send search request to Spotify API
     return Spotify.getAccessToken().then(() => {
       return fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track`,
       {
@@ -59,7 +61,9 @@ const Spotify = {
     });
   },
 
+  //Save playlist to Spotify
   savePlaylist(playlistName, trackURIs) {
+    //Get access token
     this.getAccessToken();
     let userID = '';
     let playlistID = '';
@@ -67,9 +71,9 @@ const Spotify = {
     if (playlistName === '' && trackURIs === []) {
       return;
     }
-
     let defaultAccessToken = accessToken;
 
+    //Send GET request to Spotify API for username
     return fetch(`https://api.spotify.com/v1/me`,
     {
       headers: {Authorization: `Bearer ${defaultAccessToken}`}
@@ -82,11 +86,13 @@ const Spotify = {
     }, networkError => console.log(networkError.message)
     ).then (jsonResponse => {
       if (jsonResponse.id) {
+        //return user ID
         return userID = jsonResponse.id;
       }
     }).then (() => {
       const spotifyPostPlaylist = `https://api.spotify.com/v1/users/${userID}/playlists`;
-      console.log(spotifyPostPlaylist);
+
+      //Send POST request to Spotify API to create new playlist
       return fetch(spotifyPostPlaylist, {
         headers: {Authorization: `Bearer ${defaultAccessToken}`},
         method: 'POST',
@@ -103,24 +109,22 @@ const Spotify = {
     ).then (jsonResponse => {
       if (jsonResponse.id) {
         playlistID = jsonResponse.id;
-        console.log(playlistID);
+        //Return playlist ID
         return playlistID = jsonResponse.id;
       }
-
     }).then (() => {
       const spotifyPostTracks = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
-      console.log(spotifyPostTracks);
+
+      //Send POST request to Spotify API to save track URIs passed to function
       return fetch(spotifyPostTracks, {
         headers: {Authorization: `Bearer ${defaultAccessToken}`},
         method: 'POST',
         body: JSON.stringify({'uris': trackURIs})
       });
     }).then (response => {
-      console.log(response);
       if (response.ok) {
         return response.json();
       } else {
-        console.log(response.json());
         throw new Error('Save tracks failed!');
       }
     }, networkError => console.log(networkError.message)
@@ -129,7 +133,6 @@ const Spotify = {
         return playlistID = jsonResponse.id;
       }
     });
-
   }
 };
 

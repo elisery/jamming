@@ -6,10 +6,10 @@ class TrackList extends React.Component {
   constructor(props) {
     super(props);
     const remove = this.props.isRemoval;
+    //Add an isRemoval state to the tracklist
     this.state = {isRemoval: remove};
   }
   render () {
-
     return (
       <div className="TrackList">
         {
