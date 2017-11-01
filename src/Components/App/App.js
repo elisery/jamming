@@ -56,7 +56,7 @@ class App extends Component {
     });
   }
 
-  //Search Spotify by connecting to the API via the Spotify module 
+  //Search Spotify by connecting to the API via the Spotify module
   search(searchTerm) {
     Spotify.search(searchTerm).then(tracks => {
       this.setState({searchResults: tracks});

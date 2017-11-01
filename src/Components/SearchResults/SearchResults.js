@@ -8,7 +8,7 @@ class SearchResults extends React.Component {
     //Sets state for search result tracks as '+'
     this.state = {isRemoval: false};
   }
-  
+
   render() {
     return (
       <div className="SearchResults">
