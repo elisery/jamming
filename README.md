@@ -1,7 +1,6 @@
 # Jamming
 
-This is a React website that interfaces with the Spotify API. It was created as a project for the Codecademy Ready Web Applications Course.
-
+This is a React website that interfaces with the Spotify API.
 
 ## Version
 
